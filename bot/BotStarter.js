@@ -1,6 +1,6 @@
 var bot,
   Bot,
-  Move = require('./Move'),
+  Solution = require('./Solution'),
   io = require('./io').init(process.argv[2]),
   Field = require('./Field'),
   processId = process.argv[3];
@@ -89,14 +89,16 @@ Bot.prototype.settings = function (data) {
 };
 
 Bot.prototype.action = function (data) {
+  const solution = new Solution();
 
   if (data[0] === 'move') {
 
-    var moves = this.field.getAvailableMoves();
+    const moves = this.field.getAvailableMoves();
 
-    var move = moves[Math.floor(Math.random() * moves.length)];
+    const goodMove = solution.getMove(moves, this.field.mBoard, this.field.mMacroboard);
+    const move = solution.getRandom(moves);
 
-    return "place_move " + move.x + ' ' + move.y;
+    return move.print();
   }
 };
 
